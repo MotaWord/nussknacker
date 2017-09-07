@@ -27,6 +27,7 @@ class FlinkProcessVerifier(config: Config, jars: List[URL]) extends StaticMethod
       Future.successful(())
     } catch {
       case NonFatal(e) =>
+        logger.info("Failed to verify", e)
         Future.failed(
           new IllegalArgumentException("State is incompatible, please stop process and start again with clean state", e))
     }
