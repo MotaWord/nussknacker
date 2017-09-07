@@ -141,6 +141,7 @@ class FlinkProcessManagerSpec extends FlatSpec with Matchers with ScalaFutures w
 
     exception.getMessage shouldBe "State is incompatible, please stop process and start again with clean state"
 
+    cancel(processId)
   }
 
   it should "deploy custom process" in {
