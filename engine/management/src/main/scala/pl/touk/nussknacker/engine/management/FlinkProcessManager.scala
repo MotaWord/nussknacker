@@ -92,7 +92,7 @@ class FlinkProcessManager(config: Config,
     val stoppingResult = for {
       maybeOldJob <- OptionT(findJobStatus(processId))
       maybeSavePoint <- {
-        { logger.debug(s"Deploying $processId. Status: $maybeOldJob") }
+        { logger.info(s"Deploying $processId. Status: $maybeOldJob") }
         OptionT.liftF(stopSavingSavepoint(maybeOldJob, processDeploymentData))
       }
     } yield {
@@ -182,7 +182,7 @@ class FlinkProcessManager(config: Config,
         logger.info(s"Got savepoint: ${path}")
         path
       case TriggerSavepointFailure(_, reason) =>
-        logger.error("Savepoint failed", reason)
+        logger.error(s"Savepoint failed for $jobId(${job.status}) - $savepointDir", reason)
         throw reason
     }
   }
