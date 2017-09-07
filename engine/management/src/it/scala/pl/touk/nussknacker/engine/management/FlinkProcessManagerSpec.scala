@@ -87,6 +87,7 @@ class FlinkProcessManagerSpec extends FlatSpec with Matchers with ScalaFutures w
     kafkaClient.createTopic(outTopic, 1)
 
     deployProcessAndWaitIfRunning(processEmittingOneElementAfterStart)
+    Thread.sleep(3000)
     deployProcessAndWaitIfRunning(processEmittingOneElementAfterStart)
 
     val messages = kafkaClient.createConsumer().consume(outTopic).take(2).toList
