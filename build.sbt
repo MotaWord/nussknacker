@@ -271,6 +271,33 @@ lazy val example = (project in engine("example")).
   .settings(addArtifact(artifact in (Compile, assembly), assembly))
   .dependsOn(process, kafkaFlinkUtil, kafkaTestUtil % "test", flinkTestUtil % "test")
 
+lazy val ipm = (project in engine("ipm")).
+  settings(commonSettings).
+  settings(
+    name := "motaword-ipm",
+    fork := true, // without this there are some classloading issues
+    libraryDependencies ++= {
+      Seq(
+        "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.2",
+        "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.9.2",
+        "org.projectlombok" % "lombok" % "1.16.16",
+        "org.apache.flink" %% "flink-streaming-java" % flinkV % "provided",
+        "org.apache.flink" %% "flink-streaming-scala" % flinkV % "provided",
+        "org.apache.flink" %% "flink-cep" % flinkV % "provided",
+        "org.scalatest" %% "scalatest" % scalaTestV % "test",
+        "ch.qos.logback" % "logback-classic" % logbackV % "test"
+      )
+    },
+    test in assembly := {},
+    assemblyJarName in assembly := "ipmModel.jar",
+    artifact in (Compile, assembly) := {
+      val art = (artifact in (Compile, assembly)).value
+      art.withClassifier(Some("assembly"))
+    }
+  )
+  .settings(addArtifact(artifact in (Compile, assembly), assembly))
+  .dependsOn(process, kafkaFlinkUtil, kafkaTestUtil % "test", flinkTestUtil % "test")
+
 lazy val process = (project in engine("flink/process")).
   settings(commonSettings).
   settings(
