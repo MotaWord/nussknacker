@@ -58,31 +58,31 @@ def nussknackerMergeStrategy: String => MergeStrategy = {
 val scalaTestReports = Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/surefire-reports", "-oFGD")
 val commonSettings =
   publishSettings ++
-    Seq(
-      licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-      scalaVersion  := scalaV,
-      resolvers ++= Seq(
-        "confluent" at "http://packages.confluent.io/maven"
-      ),
-      testOptions in Test += scalaTestReports,
-      testOptions in IntegrationTest += scalaTestReports,
-      scalacOptions := Seq(
-        "-unchecked",
-        "-deprecation",
-        "-encoding", "utf8",
-        "-Xfatal-warnings",
-        "-feature",
-        "-language:postfixOps",
-        "-language:existentials",
-        "-Ypartial-unification",
-        "-target:jvm-1.8"
-      ),
-      javacOptions := Seq(
-        "-Xlint:deprecation",
-        "-Xlint:unchecked"
-      ),
-      assemblyMergeStrategy in assembly := nussknackerMergeStrategy
-    )
+  Seq(
+    licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    scalaVersion  := scalaV,
+    resolvers ++= Seq(
+      "confluent" at "http://packages.confluent.io/maven"
+    ),
+    testOptions in Test += scalaTestReports,
+    testOptions in IntegrationTest += scalaTestReports,
+    scalacOptions := Seq(
+      "-unchecked",
+      "-deprecation",
+      "-encoding", "utf8",
+      "-Xfatal-warnings",
+      "-feature",
+      "-language:postfixOps",
+      "-language:existentials",
+      "-Ypartial-unification",
+      "-target:jvm-1.8"
+    ),
+    javacOptions := Seq(
+      "-Xlint:deprecation",
+      "-Xlint:unchecked"
+    ),
+    assemblyMergeStrategy in assembly := nussknackerMergeStrategy
+  )
 
 val akkaV = "2.4.20" //same version as in Flink
 val flinkV = "1.6.1"
@@ -119,17 +119,10 @@ lazy val dist = (project in file("nussknacker-dist"))
     Keys.compile in Compile := (Keys.compile in Compile).dependsOn(
       (assembly in Compile) in generic
     ).value,
-    Keys.compile in Compile := (Keys.compile in Compile).dependsOn(
-      (assembly in Compile) in ipm
-    ).value,
     packageName in Universal := ("nussknacker" + "-" + version.value),
     mappings in Universal += {
       val model = generic.base / "target" / "scala-2.11" / "genericModel.jar"
       model -> "model/genericModel.jar"
-    },
-    mappings in Universal += {
-      val model = ipm.base / "target" / "scala-2.11" / "ipmModel.jar"
-      model -> "model/ipmModel.jar"
     },
     publishArtifact := false,
     SettingsHelper.makeDeploymentSettings(Universal, packageZipTarball in Universal, "tgz")
@@ -199,10 +192,10 @@ lazy val management = (project in engine("flink/management")).
       Seq(
         "org.typelevel" %% "cats-core" % catsV,
         "org.apache.flink" %% "flink-streaming-scala" % flinkV % flinkScope
-          excludeAll(
-          ExclusionRule("log4j", "log4j"),
-          ExclusionRule("org.slf4j", "slf4j-log4j12")
-        ),
+        excludeAll(
+            ExclusionRule("log4j", "log4j"),
+            ExclusionRule("org.slf4j", "slf4j-log4j12")
+          ),
         "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingV,
         "org.scalatest" %% "scalatest" % scalaTestV % "it,test",
         "com.whisk" %% "docker-testkit-scalatest" % "0.9.0" % "it,test",
@@ -290,15 +283,13 @@ lazy val ipm = (project in engine("ipm")).
         "org.projectlombok" % "lombok" % "1.16.16",
         "org.apache.flink" %% "flink-streaming-java" % flinkV % "provided",
         "org.apache.flink" %% "flink-streaming-scala" % flinkV % "provided",
-        "org.apache.flink" %% "flink-cep-scala" % flinkV,
-        "org.apache.flink" %% "flink-cep" % flinkV,
+        "org.apache.flink" %% "flink-cep" % flinkV % "provided",
         "org.scalatest" %% "scalatest" % scalaTestV % "test",
         "ch.qos.logback" % "logback-classic" % logbackV % "test"
       )
     },
     test in assembly := {},
     assemblyJarName in assembly := "ipmModel.jar",
-    assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = includeFlinkAndScala, level = Level.Debug),
     artifact in (Compile, assembly) := {
       val art = (artifact in (Compile, assembly)).value
       art.withClassifier(Some("assembly"))
@@ -317,8 +308,6 @@ lazy val process = (project in engine("flink/process")).
         "org.apache.flink" %% "flink-streaming-scala" % flinkV % "provided",
         "org.apache.flink" %% "flink-runtime" % flinkV % "provided",
         "org.apache.flink" %% "flink-statebackend-rocksdb" % flinkV,
-        "org.apache.flink" %% "flink-cep-scala" % flinkV,
-        "org.apache.flink" %% "flink-cep" % flinkV,
         "org.scalatest" %% "scalatest" % scalaTestV % "test"
       )
     }
@@ -652,8 +641,7 @@ lazy val ui = (project in file("ui/server"))
     test in assembly := {},
     Keys.test in Test := (Keys.test in Test).dependsOn(
       //TODO: maybe here there should be engine/demo??
-      (assembly in Compile) in managementSample,
-      (assembly in Compile) in ipm
+      (assembly in Compile) in managementSample
     ).dependsOn(
       testUi
     ).value,
@@ -687,5 +675,4 @@ lazy val ui = (project in file("ui/server"))
   .dependsOn(management, interpreter, engineStandalone, processReports, securityApi, restmodel)
 
 addCommandAlias("assemblySamples", ";managementSample/assembly;standaloneSample/assembly")
-addCommandAlias("ipm", ";ipm/assembly")
 
