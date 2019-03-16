@@ -10,7 +10,11 @@ We leverage power, performance and reliability of [Apache Flink](https://flink.a
 Visit our [pages](https://touk.github.io/nussknacker) to see documentation.
 Visit our [quickstart](https://touk.github.io/nussknacker/Quickstart.html) to have a look around.
 
-# Conf
+# Docker usage in MW fork
+- First build the application. Run `buildServer.sh` in `ui` directory.
+- Then go to demo/docker directory and run `docker-compose build`.
+
+# Conf - needs documentation
 
 customProcesses
 ProcessConfigCreator

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-profile=sample
+profile=generic
 if [ $# -ge 1 ]; then
   profile=$1
 fi
