@@ -57,7 +57,7 @@ public class TooFrequentTranslation extends CustomStreamTransformer {
         }
     };
 
-    @MethodToInvoke
+    @MethodToInvoke(returnType = WorkerEvent.class)
     public FlinkCustomStreamTransformation execute(@ParamName("event") LazyParameter<WorkerEvent> event) {
         return JavaFlinkCustomStreamTransformation.apply((DataStream<Context> start, FlinkCustomNodeContext ctx) -> {
             DataStream<ValueWithContext<WorkerEvent>> filteredEvents;

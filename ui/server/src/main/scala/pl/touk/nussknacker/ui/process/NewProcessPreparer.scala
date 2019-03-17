@@ -1,5 +1,7 @@
 package pl.touk.nussknacker.ui.process
 
+import com.typesafe.scalalogging.LazyLogging
+
 import pl.touk.nussknacker.engine.ProcessingTypeData
 import pl.touk.nussknacker.engine.ProcessingTypeData.ProcessingType
 import pl.touk.nussknacker.engine.api.{MetaData, TypeSpecificData, UserDefinedProcessAdditionalFields}
@@ -21,8 +23,13 @@ object NewProcessPreparer {
 
 class NewProcessPreparer(definitions: Map[ProcessingType, ProcessDefinition[ObjectDefinition]],
                          emptyProcessCreate: Map[ProcessingType, Boolean => TypeSpecificData],
-                         additionalFields: Map[ProcessingType, Map[String, AdditionalProcessProperty]]) {
+                         additionalFields: Map[ProcessingType, Map[String, AdditionalProcessProperty]]) extends LazyLogging {
   def prepareEmptyProcess(processId: String, processingType: ProcessingType, isSubprocess: Boolean): CanonicalProcess = {
+    logger.info("processingType: " + processingType)
+    logger.info("processId: " + processId)
+    logger.info(definitions(processingType).toString)
+    logger.info(defaultAdditionalFields(processingType).toString)
+
     val exceptionHandlerFactory = definitions(processingType).exceptionHandlerFactory
     val specificMetaData = emptyProcessCreate(processingType)(isSubprocess)
     val emptyCanonical = CanonicalProcess(
