@@ -4,7 +4,7 @@ services:
 
   app:
     build:
-      context: ./app
+      context: app
       args:
         #TODO: consider sth like:
         #curl -s https://api.github.com/repos/touk/nussknacker/releases/latest | grep tag_name | awk '{ print $2 }' | sed -e 's/"//g' -e 's/,//g'
@@ -19,10 +19,11 @@ services:
       - "8080"
     volumes:
       - ./app/conf:/conf
-      - ${CODE_LOCATION}:/code-assembly.jar
+      - ./app/build/nussknacker-ui-assembly.jar:/nussknacker-ui-assembly.jar
+      - ./app/build/ipmModel.jar:/ipmModel.jar
       - sharedStorage:/opt/flinkData/savepoints
   jobmanager:
-    build: ./flink
+    build: flink
     expose:
       - "6123"
       - "8081"
@@ -39,7 +40,7 @@ services:
       - sharedStorage:/opt/flinkData/savepoints
 
   taskmanager:
-    build: ./flink
+    build: flink
     depends_on:
       - jobmanager
     command: taskmanager
@@ -62,7 +63,7 @@ services:
     image: wurstmeister/zookeeper:3.4.6
     expose:
       - "2181"
-  2181:
+  kafka:
     image: wurstmeister/kafka:0.10.2.1
     expose:
       - "9092"

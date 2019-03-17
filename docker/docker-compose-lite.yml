@@ -4,7 +4,7 @@ services:
 
   app:
     build:
-      context: ./app
+      context: app
       args:
         #TODO: consider sth like:
         #curl -s https://api.github.com/repos/touk/nussknacker/releases/latest | grep tag_name | awk '{ print $2 }' | sed -e 's/"//g' -e 's/,//g'
@@ -22,7 +22,7 @@ services:
       - ${CODE_LOCATION}:/code-assembly.jar
       - sharedStorage:/opt/flinkData
   jobmanager:
-    build: ./flink
+    build: flink
     expose:
       - "6123"
       - "8081"
@@ -39,7 +39,7 @@ services:
       - sharedStorage:/opt/flinkData
 
   taskmanager:
-    build: ./flink
+    build: flink
     depends_on:
       - jobmanager
     command: taskmanager

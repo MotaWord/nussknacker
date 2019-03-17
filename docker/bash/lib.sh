@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 REPO_BASE_PATH=$(git rev-parse --show-toplevel)
-DOCKER_DEMO_PATH="$REPO_BASE_PATH/demo/docker"
+DOCKER_DEMO_PATH="$REPO_BASE_PATH/docker"
 
 
 buildModule(){
