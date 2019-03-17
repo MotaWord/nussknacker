@@ -33,8 +33,12 @@ class IPMProcessConfigCreator extends ProcessConfigCreator {
 
   override def expressionConfig(config: Config) = ExpressionConfig(Map.empty, List.empty)
 
-  override def buildInfo(): Map[String, String] =
-    Map.empty
+  override def buildInfo(): Map[String, String] = {
+    val engineBuildInfo = pl.touk.nussknacker.engine.version.BuildInfo.toMap.map { case (k, v) => s"engine-$k" -> v.toString }
+    engineBuildInfo ++ Map(
+      "process-version" -> "0.1"
+    )
+  }
 
   override def signals(config: Config): Map[String, WithCategories[ProcessSignalSender]] =
     Map.empty

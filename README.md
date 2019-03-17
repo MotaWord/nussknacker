@@ -12,7 +12,7 @@ Visit our [quickstart](https://touk.github.io/nussknacker/Quickstart.html) to ha
 
 # Docker usage in MW fork
 - First build the application. Run `buildServer.sh` in `ui` directory.
-- Then go to demo/docker directory and run `docker-compose build`.
+- Then go to `docker` directory and run `docker-compose build`.
 
 # Conf - needs documentation
 

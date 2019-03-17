@@ -8,7 +8,7 @@ To run this quickstart you have to
 
 ## Running
 
-* Checkout Nussknacker [project](https://github.com/touk/nussknacker) and enter demo/docker folder
+* Checkout Nussknacker [project](https://github.com/touk/nussknacker) and enter ./docker folder
 * Run ./downloadSampleAssembly.sh script
 * Run `docker-compose up` and wait a while until all components start
     * In case of containers restart please use `docker-compose stop` instead of `docker-compose kill` in order to avoid Kafka startup issues.

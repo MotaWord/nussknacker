@@ -64,11 +64,17 @@ abstract class DbWriteProcessRepository[F[_]](val dbConfig: DbConfig,
   def saveNewProcess(processName: ProcessName, category: String, processDeploymentData: ProcessDeploymentData,
                      processingType: ProcessingType, isSubprocess: Boolean)
                     (implicit loggedUser: LoggedUser): F[XError[Unit]] = {
+    logger.info("@saveNewProcess")
+
     val processToSave = ProcessEntityData(id = -1L, name = processName.value, processCategory = category,
       description = None, processType = ProcessType.fromDeploymentData(processDeploymentData),
       processingType = processingType, isSubprocess = isSubprocess, isArchived = false)
 
+    logger.info("@before insertNew")
+
     val insertNew = processesTable.returning(processesTable.map(_.id)).into { case (entity, newId) => entity.copy(id = newId) }
+
+    logger.info("@after insertNew")
 
     val insertAction = logInfo(s"Saving process ${processName.value} by user $loggedUser").flatMap { _ =>
       latestProcessVersions(processName).result.headOption.flatMap {
@@ -79,6 +85,8 @@ abstract class DbWriteProcessRepository[F[_]](val dbConfig: DbConfig,
         }
       }.map(_.map(_ => ()))
     }
+
+    logger.info("@before run insertaction")
 
     run(insertAction)
   }

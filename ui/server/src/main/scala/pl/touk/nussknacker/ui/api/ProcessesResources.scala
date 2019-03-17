@@ -193,7 +193,9 @@ class ProcessesResources(val processRepository: FetchingProcessRepository,
                 complete {
                   typesForCategories.getTypeForCategory(category) match {
                     case Some(processingType) =>
+                      logger.info("before makeEmptyProcess")
                       val emptyProcess = makeEmptyProcess(processName, processingType, isSubprocess)
+                      logger.info("after makeEmptyProcess")
                       writeRepository.saveNewProcess(
                         processName = ProcessName(processName),
                         category = category,
@@ -314,7 +316,9 @@ class ProcessesResources(val processRepository: FetchingProcessRepository,
   }
 
   private def makeEmptyProcess(processId: String, processingType: ProcessingType, isSubprocess: Boolean) = {
+    logger.info("in makeEmptyProcess")
     val emptyCanonical = newProcessPreparer.prepareEmptyProcess(processId, processingType, isSubprocess)
+    logger.info("in after emptycaonnal")
     GraphProcess(UiProcessMarshaller.toJson(emptyCanonical, PrettyParams.nospace))
   }
 

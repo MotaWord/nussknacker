@@ -16,7 +16,12 @@ fi
 
 ./sbtwrapper ui/assembly
 
-cp ./ui/server/target/scala-*/nussknacker-ui-assembly.jar ./demo/docker/app/build/nussknacker-ui-assembly.jar
-cp ./engine/ipm/target/scala-*/ipmModel.jar ./demo/docker/app/build/ipmModel.jar
+cp ./ui/server/target/scala-*/nussknacker-ui-assembly.jar ./docker/app/build/nussknacker-ui-assembly.jar
+cp ./engine/ipm/target/scala-*/ipmModel.jar ./docker/app/build/ipmModel.jar
+
+cd ./docker
+docker-compose kill
+docker-compose rm -f -v
+docker-compose up --build
 
 cd -

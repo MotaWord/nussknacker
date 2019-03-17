@@ -62,7 +62,7 @@ services:
     image: wurstmeister/zookeeper:3.4.6
     expose:
       - "2181"
-  kafka:
+  2181:
     image: wurstmeister/kafka:0.10.2.1
     expose:
       - "9092"
